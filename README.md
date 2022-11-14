@@ -14,3 +14,11 @@
 
 - [GET Request via WCF](https://www.youtube.com/watch?v=dPPGMxx555w&t=35s)
 - [POST Request via WCF](https://stackoverflow.com/questions/38766564/post-request-to-wcf-service-from-a-rest-client)
+
+# To change development port
+
+1. Right click project
+2. Unload Project
+3. Edit Project File
+4. Replace default port to "8080".
+5. Reload Project file
