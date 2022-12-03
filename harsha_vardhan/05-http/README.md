@@ -74,7 +74,7 @@ Content-Length: 44
 Connection: close
 Content-Type: text/html
 X-Pad: avoid browser bug
-  
+
 <html><body><h1>It works!</h1></body></html>
 ```
 
@@ -94,6 +94,20 @@ X-Pad: avoid browser bug
 
 ## Request
 
+- The `Request` object contains request details sent from browser to server.
+  - Member of `System.Web.Mvc.Controller` class.
+  - Type `System.Web.RequestBase`
+
+|        Request Properties         |                   Description                    |
+| :-------------------------------: | :----------------------------------------------: |
+|           `Request.Url`           |             Represents current url.              |
+| `Request.PhysicalApplicationPath` |         Represents current folder path.          |
+|          `Request.Path`           |         Represents current virtual path.         |
+|      `Request.Browser.Type`       |         Represents current browser name.         |
+|       `Request.QueryString`       |         Represents current query string.         |
+|         `Request.Headers`         |   Represents request headers (key/value pairs)   |
+|       `Request.HttpMethod`        | Represents http method of the request (GET/POST) |
+
 ```cs
 public ActionResult RequestExample()
 {
@@ -110,3 +124,13 @@ public ActionResult RequestExample()
 
 ## Response
 
+- The "Response" object contains the content that is to be sent from server to browser.
+  - Member of `System.Web.Mvc.Controller` class.
+  - Type `System.Web.RequestBase`
+
+|  Response Properties   |                             Description                              |
+| :--------------------: | :------------------------------------------------------------------: |
+|   `Response.Write()`   |                 Sends given content to the browser.                  |
+| `Response.ContentType` |         Represents type of response content. E.g., text/html         |
+|   `Response.Headers`   | Represents response headers that can be sent from server to browser. |
+| `Response.StatusCode`  |          Represents status of request. E.g., 200, 302, etc.          |
