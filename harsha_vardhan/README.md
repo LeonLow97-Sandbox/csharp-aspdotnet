@@ -416,3 +416,89 @@ public ActionResult RequestExample()
 - _Execution Flow_: Controller --> View --> Layout View --> Rendered View Result --> Send response to browser.
 - One View can only have 1 Layout View.
 
+## Create a Layout View
+
+1. Created Shared Folder in Views
+2. Create new item in shared folder
+
+- Web --> MVC --> MVC 5 Layout Page (Razor)
+
+- The `@RenderBody()` method must be present in the LayoutView.cshtml file.
+
+```html
+<div class="container-fluid">@RenderBody()</div>
+```
+
+- In other controllers, add view and select '_use a layout page_'
+
+```cs
+@{
+  // if "Home" is specified here, ViewBag.Title value can be accessed in LayoutView.cshtml
+  // because the execution flow is View --> Layout View
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+```
+
+## Sections in Layout Views
+
+- Sections are used to display view-specific content in the layout view.
+- Sections are defined in the view and rendered in the layout view.
+
+```cs
+// Layout View
+@RenderSection("section name")
+
+// Optional to provide a section
+@RenderSection("section name", required: false)
+```
+
+```cs
+// View
+@section sectionname
+{
+  Content Here
+}
+```
+
+## `_ViewStart.cshtml`
+
+- It defines the **default layout view of all the views of a folder**.
+- If it is present in the "Views" folder, it defines the default layout view of all the views of entire project.
+- If it is present in `View\ControllerName` folder, it defines the default layout view of all the views of same controller only.
+- _Execution Flow_: Controller --> \_ViewStart.cshtml of "Views" folder --> \_ViewStart.cshtml of "Controller1" folder --> View --> Layout View --> Generate View Result --> Response
+
+```cs
+// In _ViewStart.cshtml
+@{
+  Layout = "Path of Layout View"
+}
+```
+
+## Partial Views
+
+- Partial View is a small view that contains content that can be shared among multiple views.
+- Can be present in "Views\ControllerName" folder or in "Views\Shared" folder.
+
+#### Example:
+
+- Created a file called `PartialView.cshtml` with some content.
+- In View1.cshtml
+
+```cs
+@{Html.RenderPartial();}
+```
+
+- In View2.cshtml
+
+```cs
+@{Html.RenderPartial();}
+```
+
+## View vs Partial View
+
+|                                 View                                  |                                       Partial View                                       |
+| :-------------------------------------------------------------------: | :--------------------------------------------------------------------------------------: |
+|                    View can contain a layout page.                    |                       Partial view doesn't contain a layout page.                        |
+| `_ViewStart.cshtml` file will be called before the execution of view. |        `_ViewStart.cshtml` file will not be called before the execution of view.         |
+| View can have html structured elements such as html, head, body, etc. | Partial view doesn't contain any html structured elements such as html, head, body, etc. |
