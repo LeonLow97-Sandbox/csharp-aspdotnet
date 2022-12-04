@@ -14,6 +14,7 @@ namespace LayoutViews.Controllers
             return View();
         }
 
+        [Route("Products/Details/{id:int?}")]
         public ActionResult Details(int? id)
         {
             var products = new[]
@@ -41,6 +42,7 @@ namespace LayoutViews.Controllers
             }
         }
 
+        [Route("Products/GetProductID/{productName?}")]
         public ActionResult GetProductID(string productName)
         {
             var products = new[]

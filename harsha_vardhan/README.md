@@ -616,3 +616,73 @@ public static void RegisterRoutes(RouteCollection routes)
     );
 }
 ```
+
+# Chapter 8: Attribute Routing
+
+## Problems in Convention Routing
+
+- Very difficult to understand for the developers, which route is for which action methods.
+- Very difficult to avoid conflicts among the routes (sometimes, we can't apply constraints).
+- Overall, some routes for multiple action methods; some routes for specific action methods; Overall, it looks cumbersome.
+
+```cs
+// conventional routing: cumbersome!!
+protected static void RegisterRoutes(RouteCollection routes)
+{
+  routes.MapRoute("name", "url", defaults, constraints)
+  routes.MapRoute("name", "url", defaults, constraints)
+  routes.MapRoute("name", "url", defaults, constraints)
+}
+```
+
+## Types of URL Routing (Convention vs Attribute)
+
+```cs
+// Attribute Routing
+["url"]
+public ActionResult MethodName()
+{
+
+}
+```
+
+|                  Convention Routing                  |                                  Attribute Routing                                   |
+| :--------------------------------------------------: | :----------------------------------------------------------------------------------: |
+|             Traditional way of routing.              |                          New and preferred way of routing.                           |
+| Applicable for a specific / multiple action methods. | Applicable for specific action method. Each action method must have "Route" defined. |
+|              Routes will be cumbersome.              |                Routes are clearly understandable for the developers.                 |
+|                 Enabled by default.                  |              Should be enabled using `routes.MapMvcAttributeRouting();`              |
+|          Supports parameters & constraints.          |                       Also supports parameters & constraints.                        |
+
+## Attribute Routing
+
+```cs
+public static void RegisterRoutes(RouteCollection routes)
+{
+    routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+    routes.MapMvcAttributeRoutes();
+}
+```
+
+#### Examples of Attribute Routing
+
+```cs
+[Route("Products/Details/{id:int?}")] // in case of nullable values provided to int
+[Route("Products/GetProductID/{productName?}")] // in case of nullable values provided to string (don't need to specify type "string")
+[Route("Home/Index")]
+[Route("")] // default route if nothing is specified.
+[Route("Profile")] // only action name is provided so it will take the controller this function is placed in.
+[Route("Products/Details/{id:range(1,3)?}")] // providing a range to id
+```
+
+#### Other Types of Attribute Routing
+
+- `alpha`, `bool`, `datetime`, `decimal`, `double`, `float`, `int`, `length(n)`, `long`, `min(n)`, `max(n)`, `maxlength(n)`, `range(n1, n2)`, `regex`
+
+# Chapter 9: Models & Strongly Typed Views
+
+## Models
+
+- Model is a class that defines structure of the data that you want to store/display.
+- Also contains business logic.
