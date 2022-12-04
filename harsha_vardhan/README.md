@@ -502,3 +502,117 @@ public ActionResult RequestExample()
 |                    View can contain a layout page.                    |                       Partial view doesn't contain a layout page.                        |
 | `_ViewStart.cshtml` file will be called before the execution of view. |        `_ViewStart.cshtml` file will not be called before the execution of view.         |
 | View can have html structured elements such as html, head, body, etc. | Partial view doesn't contain any html structured elements such as html, head, body, etc. |
+
+# Chapter 7: Convention URL Routing
+
+## URL Routing
+
+- URL Routing is a pattern-matching system that monitors the incoming request url and figure out what to do with that.
+- It allows you to create meaningful URLs, instead of mapping to physical files on the server.
+- Advantages
+  - Makes the URL not to map to physical files on the server.
+  - URLs are user-friendly.
+  - URLs are search-engine friendly.
+
+## Route
+
+- Route is a URL pattern which includes literals / parameters.
+- Literal is a fixed text that must be present in the URL.
+- Parameter is a variable, which value can be entered by the user.
+
+## Routing Table
+
+- Routing Table contains the list of routes.
+  - When the request is received from the browser, the Routing Engine (part of Asp.Net Mvc Framework) searches whether the actual URLs matches any one of the routes in the `RouteTable`.
+  - If one matches, it goes to the corresponding controller.
+  - If none of it matches, then HTTP 404.
+
+## URL Routing - Development
+
+- `Application_Start()` invokes `RegisterRouter` method of `RouteConfig` class and passes `Routes` property of `RouteTable` class.
+- The `Routes` property of `RouteTable` class is of `RouteCollection` type, which defines the actual routes.
+- Can add routes into the `RouteCollection`, using `MapRoute` method.
+- All the routes that are added to the `RouteCollection`, will be stored in the `RouteTable` for the first request.
+
+```cs
+// Global.asax
+protected void Application_Start()
+{
+  RouteConfig.RegisterRoutes(RouteTable.Routes)
+}
+```
+
+```cs
+// RouteConfig.cs
+public static void RegisterRoutes(RouteCollection routes)
+{
+  routes.MapRoute(
+    name: "route1",
+    url: "{param1}/{param2}",
+    defaults: new {param1 = "defaultvalue", param2 = "defaultvalue"},
+    constraints: new {param1 = "constraint1", param2 = "constraint2"},
+  )
+}
+```
+
+```cs
+// Add to Web.config
+// tracks the incoming request and store the information, and provides log for you
+<trace enabled="true"/>
+```
+
+<img src="trace.jpg">
+
+## Enable Nullable Entries
+
+- ActionResult can now accept null values
+- For `int`, accept as `int?` with a question mark
+
+```cs
+public ActionResult Details(int? id)
+{
+    if (id == null)
+    {
+        return ...
+    } else
+    {
+        return ...
+    }
+}
+```
+
+## Resolving Conflicts Between Routes
+
+- Receiving a different parameter name
+- In Controller:
+
+```cs
+// In Controller, receiving parameter as 'productName'
+public ActionResult GetProductID(string productName)
+
+// Another route in the same controller, receiving as 'id'
+public ActionResult Details(int? id)
+```
+
+- Adding constraints
+- In Route.Config file:
+
+```cs
+public static void RegisterRoutes(RouteCollection routes)
+{
+    routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+    routes.MapRoute(
+        name: "products",
+        url: "{controller}/{action}/{productName}",
+        defaults: new { },
+        constraints: new { productName = @"^[A-Za-z ]*$" }
+    );
+
+    routes.MapRoute(
+        name: "Default",
+        url: "{controller}/{action}/{id}",
+        defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+    );
+}
+```
