@@ -744,3 +744,146 @@ return View(products);
         }
 </tbody>
 ```
+
+# Chapter 9: Model Binding
+
+## Model Binding
+
+- Process of receiving values from different sources of the request and passing them as arguments to action method.
+- Assigns values to different parameters of the action method automatically.
+
+```cs
+REQUEST: /Student/Edit?id=1
+
+// Model Binding
+public ActionResult Edit (int id)
+{
+  ...
+}
+```
+
+#### Model Binding with Complex Types
+
+- Model Binding can work with Complex Types
+- Model Binding can automatically convert from field data or query string values to the properties of a complex type parameter of an action method.
+- Default values are null or zero(0) if not provided.
+
+```cs
+// Model Class
+public class Student
+{
+  public int StudentId {get;set;}
+  public string StudentMarks {get;set;}
+  public double Marks {get;set;}
+}
+
+// Form
+StudentId = 1
+StudentName = "abc"
+Marks = 80
+
+// Action Method
+public ActionResult Edit (Student student) 
+{
+  ...
+}
+```
+
+## Use of `@Url.Action`
+
+- Use `Url.Action` when you need to generate only an url.
+
+```cs
+//  /controllername/actionname/123
+@Url.Action("actionName", "controllerName", new {id = "123"})
+```
+
+## POST action in FORM
+
+- In `.cshtml`
+```html
+<!-- POST TO Create action and Products controller --> 
+<form action="/Products/Create" method="post">
+    <div class="form-group">
+        <label>Product Id</label>
+        <input type="text" class="form-control" id="txtProductId" palceholder="Product ID" name="ProductId" />
+    </div>
+    <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" class="form-control" id="txtProductName" palceholder="Product Name" name="ProductName" />
+    </div>
+    <div class="form-group">
+        <label>Rate</label>
+        <input type="text" class="form-control" id="txtRate" palceholder="Rate" name="Rate" />
+    </div>
+    <button type="submit">Submit</button>
+</form>
+```
+
+- In controller:
+  - When `[HttpPost]` is specified, the form will be sent to that action.
+
+```cs
+public ActionResult Create()
+{
+    return View();
+}
+
+[HttpPost]
+public ActionResult Create(Product p)
+{
+    return View();
+}
+```
+
+## Bind Attribute
+
+- The [Bind] Attribute allows you to specify the list of properties that you want to bind into the model object, that is received using "Model Binding".
+- It allows you to specify "Include" and "Exclude" comma-separated list of properties.
+
+```cs
+// Model Class
+public class Student
+{
+  public int StudentId {get;set;}
+  public string StudentName {get;set;}
+  public double Marks {get;set;}
+}
+
+// Action Method
+public ActionResult Create([Bind(Include = "StudentId, StudentName")] Student stu) {}
+public ActionResult Create([Bind(Exclude = "StudentId, StudentName")] Student stu) {}
+```
+
+## Custom Model Binders
+
+- Whenever the list of fields of the view and list of fields of model are different, you have to use "Custom Model Binders" to map exactly which value of view should be stored in which property of model.
+
+```cs
+// Custom Model Binder
+public class CustomBinder : IModelBinder
+{
+  public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+  {
+    ...
+  }
+}
+
+// Action Method
+public ActionResult Create([ModelBinder(typeof(CustomBinder))] Student stu)
+{
+  ...
+}
+```
+
+- Add Custom Model Binders to "Binders" collection in `Application_Start()` method.
+
+```cs
+// Global.asax
+public void Application_Start()
+{
+  ModelBinders.Binders.Add(typeof(Student), new CustomBinder)
+}
+```
+
+# Chapter 10: Entity Framework Db-First Approach
