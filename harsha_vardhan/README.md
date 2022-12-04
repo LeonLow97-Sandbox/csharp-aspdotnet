@@ -686,3 +686,61 @@ public static void RegisterRoutes(RouteCollection routes)
 
 - Model is a class that defines structure of the data that you want to store/display.
 - Also contains business logic.
+- Model will be called by Controller and View
+
+```cs
+// View Model
+// Represents the structure of the data that you want to display to user
+public class ViewModel
+{
+  public dataType propertyName {get; set}
+}
+
+// Domain Model
+// Represents the structure of the data that you want to store in the database table.
+public class DomainModel
+{
+  public dataType propertyName {get; set}
+}
+
+// Service Model
+// Represents business logic (code that needs to be executed before inserting/updating etc.)
+public class ServiceModel
+{
+  public returnType methodName {...}
+}
+```
+
+## Strongly Typed Views
+
+- View that is associated to a specific model class is called as "Strongly Typed View".
+- Strongly typed views have to specify the model class name with @model directive at the top of the view.
+- Strongly typed views can receive model object from the controller. `@model modelClassName`
+- E.g., `@model Models.Models.Product`
+
+```cs
+// Controller, returns the object
+return View(matchingProduct);
+
+// In view
+@model Models.Models.Product
+<td>@Model.ProductId</td>
+```
+
+```cs
+// Controller, returns collection
+return View(products);
+
+// In view
+@model List<Models.Models.Product>
+<tbody>
+    @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductId</td>
+                <td><a href="/products/details/@item.ProductId">@item.ProductName</a></td>
+                <td>@item.Rate</td>
+            </tr>
+        }
+</tbody>
+```

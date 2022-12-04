@@ -28,8 +28,8 @@ namespace LayoutViews.Controllers
             return View();
         }
 
-        [Route("Profile")]
-        public ActionResult UserProfile()
+        [Route("Home/Profile")]
+        public ActionResult Profile()
         {
             return View();
         }
